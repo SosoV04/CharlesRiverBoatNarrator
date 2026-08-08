@@ -8,7 +8,10 @@
 //   node scripts/extract-map-coords.mjs            # print a coordinate report
 //   node scripts/extract-map-coords.mjs --json     # emit centroids as JSON
 //   node scripts/extract-map-coords.mjs --crops    # write per-marker crops (see --out)
+//   node scripts/extract-map-coords.mjs --overlay  # draw rings where hotspots will sit
 //   node scripts/extract-map-coords.mjs --emit     # print the COORDS block for data/
+//   node scripts/extract-map-coords.mjs --sync-index  # push coords into index.html
+//   node scripts/extract-map-coords.mjs --check       # fail if index.html has drifted
 //
 // HOW IT WORKS
 //   1. Decode map.png by hand — chunk walk, zlib inflate, scanline unfilter.
@@ -213,6 +216,40 @@ function crc32(type, data) {
   return c ^ -1;
 }
 
+// --- index.html sync ---------------------------------------------------------
+// index.html is a self-contained monolith that cannot import ES modules over
+// file://, so it carries an inlined copy of the coordinates. That copy is
+// generated from data/map-coordinates.js and guarded by --check, so the two
+// cannot drift apart unnoticed.
+
+const INDEX = path.join(ROOT, "index.html");
+const BEGIN = "/* MAP-COORDS:BEGIN";
+const END = "/* MAP-COORDS:END */";
+
+function renderInlineBlock(coords) {
+  const nums = Object.keys(coords).map(Number).sort((a, b) => a - b);
+  const lines = [];
+  for (let i = 0; i < nums.length; i += 3) {
+    lines.push("  " + nums.slice(i, i + 3)
+      .map(n => `${String(n).padStart(2)}:{x:${coords[n].x_pct.toFixed(2)},y:${coords[n].y_pct.toFixed(2)}}`)
+      .join(", "));
+  }
+  return "const MAP_COORDS = {\n" + lines.join(",\n") + "\n};";
+}
+
+function readInlineBlock() {
+  const html = fs.readFileSync(INDEX, "utf8");
+  const b = html.indexOf(BEGIN), e = html.indexOf(END);
+  if (b === -1 || e === -1) throw new Error("MAP-COORDS markers not found in index.html");
+  const afterComment = html.indexOf("*/", b) + 2;
+  return { html, b, e, afterComment, body: html.slice(afterComment, e).trim() };
+}
+
+async function loadCoords() {
+  const { COORDS } = await import(path.join(ROOT, "data", "map-coordinates.js").replace(/\\/g, "/").replace(/^([a-zA-Z]):/, "file:///$1:"));
+  return COORDS;
+}
+
 // --- CLI ---------------------------------------------------------------------
 
 const isMain = process.argv[1] && path.resolve(process.argv[1]) === path.resolve(import.meta.filename);
@@ -222,6 +259,29 @@ if (isMain) {
     const i = args.indexOf("--out");
     return i !== -1 ? args[i + 1] : path.join(ROOT, ".map-extract");
   })();
+
+  // These two compare data/ against index.html and never touch the image.
+  if (args.includes("--sync-index") || args.includes("--check")) {
+    const want = renderInlineBlock(await loadCoords());
+    const { html, afterComment, e, body } = readInlineBlock();
+    if (args.includes("--check")) {
+      if (body === want) {
+        console.log("OK — index.html MAP_COORDS matches data/map-coordinates.js");
+      } else {
+        console.error("DRIFT — index.html MAP_COORDS does not match data/map-coordinates.js");
+        console.error("Run: node scripts/extract-map-coords.mjs --sync-index");
+        process.exit(1);
+      }
+    } else {
+      if (body === want) {
+        console.log("index.html already up to date");
+      } else {
+        fs.writeFileSync(INDEX, html.slice(0, afterComment) + "\n" + want + "\n" + html.slice(e));
+        console.log("index.html MAP_COORDS updated from data/map-coordinates.js");
+      }
+    }
+    process.exit(0);
+  }
 
   const img = decodePng(MAP);
   const markers = findMarkers(img);
@@ -244,6 +304,36 @@ if (isMain) {
       console.log(`  ${String(n).padStart(2)}: { x_pct: ${m.x_pct.toFixed(2).padStart(5)}, y_pct: ${m.y_pct.toFixed(2).padStart(5)} },`);
     }
     console.log("};");
+  } else if (args.includes("--overlay")) {
+    // Draw a ring at every coordinate in data/map-coordinates.js. Each ring should
+    // land concentrically on a printed circle — this is what index.html's hotspots
+    // will sit on, rendered as an image so it can be checked without a browser.
+    const coords = await loadCoords();
+    fs.mkdirSync(outDir, { recursive: true });
+    const { width: W, height: H, bpp, stride, px } = img;
+    const out = Buffer.alloc(W * H * 3);
+    for (let y = 0; y < H; y++) {
+      for (let x = 0; x < W; x++) {
+        const s = y * stride + x * bpp, d = (y * W + x) * 3;
+        out[d] = px[s]; out[d + 1] = px[s + 1]; out[d + 2] = px[s + 2];
+      }
+    }
+    const R = 15.8, T = 2.2;
+    for (const n of Object.keys(coords)) {
+      const cx = coords[n].x_pct / 100 * W, cy = coords[n].y_pct / 100 * H;
+      for (let y = Math.floor(cy - R - T); y <= Math.ceil(cy + R + T); y++) {
+        for (let x = Math.floor(cx - R - T); x <= Math.ceil(cx + R + T); x++) {
+          if (x < 0 || y < 0 || x >= W || y >= H) continue;
+          const dist = Math.hypot(x - cx, y - cy);
+          if (dist < R - T || dist > R + T) continue;
+          const d = (y * W + x) * 3;
+          out[d] = 255; out[d + 1] = 0; out[d + 2] = 90; // magenta: absent from the map's palette
+        }
+      }
+    }
+    const f = path.join(outDir, "hotspot-overlay.png");
+    fs.writeFileSync(f, encodePng(W, H, out));
+    console.log(`wrote ${f} — ${Object.keys(coords).length} rings; each should sit concentrically on a printed circle`);
   } else if (args.includes("--crops") || args.includes("--verify")) {
     // --crops   crops in detector index order — used to READ the digits.
     // --verify  crops in map-number order — a correct mapping reads 1,2,3...N.
