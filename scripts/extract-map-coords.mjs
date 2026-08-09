@@ -244,6 +244,11 @@ function renderInlineBlock(coords) {
   return "const MAP_COORDS = {\n" + lines.join(",\n") + "\n};";
 }
 
+// Compare on content, not line endings. renderInlineBlock builds with "\n", but
+// on Windows with core.autocrlf=true a checkout hands index.html back as CRLF,
+// so a raw === reports drift on a file whose 45 coordinates are all identical.
+const sameBlock = (a, b) => a.replace(/\r\n/g, "\n") === b.replace(/\r\n/g, "\n");
+
 function readInlineBlock() {
   const html = fs.readFileSync(INDEX, "utf8");
   const b = html.indexOf(BEGIN), e = html.indexOf(END);
@@ -272,7 +277,7 @@ if (isMain) {
     const want = renderInlineBlock(await loadCoords());
     const { html, afterComment, e, body } = readInlineBlock();
     if (args.includes("--check")) {
-      if (body === want) {
+      if (sameBlock(body, want)) {
         console.log("OK — index.html MAP_COORDS matches data/map-coordinates.js");
       } else {
         console.error("DRIFT — index.html MAP_COORDS does not match data/map-coordinates.js");
@@ -280,7 +285,7 @@ if (isMain) {
         process.exit(1);
       }
     } else {
-      if (body === want) {
+      if (sameBlock(body, want)) {
         console.log("index.html already up to date");
       } else {
         fs.writeFileSync(INDEX, html.slice(0, afterComment) + "\n" + want + "\n" + html.slice(e));
