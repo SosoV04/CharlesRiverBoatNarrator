@@ -14,7 +14,7 @@
 //   node scripts/extract-map-coords.mjs --check       # fail if index.html has drifted
 //
 // HOW IT WORKS
-//   1. Decode map.png by hand — chunk walk, zlib inflate, scanline unfilter.
+//   1. Decode photos/map.png by hand — chunk walk, zlib inflate, scanline unfilter.
 //      No image dependencies, so this runs on a bare Node install.
 //   2. Mask the mint marker fill.
 //   3. Group masked pixels into connected components (4-way, iterative).
@@ -33,7 +33,7 @@ import zlib from "zlib";
 import path from "path";
 
 const ROOT = path.resolve(import.meta.dirname, "..");
-const MAP = path.join(ROOT, "map.png");
+const MAP = path.join(ROOT, "photos", "map.png");
 
 // Mint marker fill, ~rgb(165,243,133). Tuned to the map's marker color; wide
 // enough to survive the anti-aliased rim, tight enough to exclude the land
@@ -45,7 +45,7 @@ const MIN_AREA = 700, MAX_AREA = 2600;
 const MIN_SIDE = 36, MAX_SIDE = 62, MAX_SKEW = 10;
 
 // The number printed inside each detected circle, in detector index order.
-// Read by eye from the `--crops` montage against map.png (1498x1050).
+// Read by eye from the `--crops` montage against photos/map.png (1498x1050).
 //
 // THIS IS IMAGE-SPECIFIC. If the map is redrawn, the detector's index order
 // changes and this list is meaningless until it is re-read from a fresh
