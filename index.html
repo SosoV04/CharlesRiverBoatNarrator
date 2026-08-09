@@ -111,10 +111,11 @@
   .stop-row .num{font-family:'Helvetica Neue',Arial,sans-serif;font-size:12px;color:#fff;background:var(--river);
     min-width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:0 0 auto;}
   .stop-row.current .num{background:var(--gold);color:#3a2c08;}
-  /* Beats with no map circle keep the slot so titles stay aligned, but draw no
-     disc — an empty filled circle would read as a missing number. */
-  .stop-row .num.none{background:none;}
-  .stop-row.current .num.none{background:none;}
+  /* Beats with no map circle (halfway break, closing, and the Esplanade/Back Bay
+     segments) draw a pale disc in place of a number, so every row carries the
+     same shape and the empty slot never reads as a gap. */
+  .stop-row .num.none{background:var(--river-light);}
+  .stop-row.current .num.none{background:var(--gold-soft);}
   .stop-row .nm{font-size:17px;}
   .stop-row .mn{margin-left:auto;font-family:'Helvetica Neue',Arial,sans-serif;font-size:12px;color:var(--muted);}
 
