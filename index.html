@@ -118,13 +118,15 @@
     max-width:calc(100vw - 20px);max-height:calc(100dvh - 72px);background:var(--river-light);}
   /* "actual size" mode: let the map exceed the viewport and pan inside .map-scroll,
      so the 45 markers are big enough to hit on a phone. */
-  .map-wrap.full #mapImg{max-width:none;max-height:none;width:1090px;}
+  .map-wrap.full #mapImg{max-width:none;max-height:none;width:1498px;}
 
   /* Hotspots sit invisibly on top of the circles the map already has printed on
      it, so the artwork stays readable. Sized as a % of the map so they track the
-     image at any zoom: the printed circles are ~30px across on a 1090px map. */
+     image at any zoom: the printed circles are ~50px across on a 1498px map.
+     At that native width no two hotspots touch — the closest pair, 17 and 18,
+     sits 57px apart centre to centre. */
   .hotspot{position:absolute;transform:translate(-50%,-50%);background:none;border:none;padding:0;
-    cursor:pointer;width:2.9%;aspect-ratio:1;border-radius:50%;z-index:2;}
+    cursor:pointer;width:3.3%;aspect-ratio:1;border-radius:50%;z-index:2;}
   .hotspot:hover,.hotspot:focus-visible{outline:none;box-shadow:0 0 0 3px var(--gold),0 0 0 5px rgba(255,255,255,.85);}
   .hotspot .lbl{position:absolute;left:50%;top:100%;transform:translateX(-50%);margin-top:5px;
     font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;line-height:1.2;color:#fff;
@@ -417,21 +419,21 @@ function closeSheet(){ $("#sheet").classList.add("hidden"); }
    Regenerate with:  node scripts/extract-map-coords.mjs --sync-index
    Verify with:      node scripts/extract-map-coords.mjs --check            */
 const MAP_COORDS = {
-   1:{x:71.93,y:31.44},  2:{x:85.97,y:48.27},  3:{x:79.88,y:52.63},
-   4:{x:73.05,y:50.06},  5:{x:75.82,y:59.40},  6:{x:70.83,y:69.43},
-   7:{x:75.67,y:87.62},  8:{x:70.25,y:82.16},  9:{x:61.19,y:89.44},
-  10:{x:56.50,y:84.58}, 11:{x:55.61,y:93.63}, 12:{x:45.57,y:66.97},
-  13:{x:34.22,y:77.32}, 14:{x:27.41,y:77.32}, 15:{x:15.39,y:77.32},
-  16:{x:13.61,y:69.25}, 17:{x:8.88,y:67.98}, 18:{x:5.73,y:65.36},
-  19:{x:22.14,y:67.25}, 20:{x:18.71,y:63.08}, 21:{x:17.66,y:56.21},
-  22:{x:16.73,y:49.87}, 23:{x:16.25,y:37.81}, 24:{x:4.63,y:41.60},
-  25:{x:6.45,y:31.37}, 26:{x:18.72,y:14.52}, 27:{x:12.33,y:13.16},
-  28:{x:14.90,y:18.21}, 29:{x:10.36,y:21.03}, 30:{x:16.65,y:24.92},
-  31:{x:8.61,y:27.32}, 32:{x:5.07,y:52.55}, 33:{x:6.26,y:58.78},
-  34:{x:33.30,y:60.88}, 35:{x:39.25,y:61.45}, 36:{x:40.67,y:67.21},
-  37:{x:46.77,y:54.84}, 38:{x:50.50,y:53.93}, 39:{x:53.90,y:50.88},
-  40:{x:58.01,y:51.99}, 41:{x:71.85,y:61.95}, 42:{x:90.08,y:64.23},
-  43:{x:77.33,y:49.08}, 44:{x:91.00,y:32.88}, 45:{x:79.69,y:29.71}
+   1:{x:71.15,y:30.30},  2:{x:84.24,y:46.85},  3:{x:79.42,y:51.71},
+   4:{x:71.52,y:49.80},  5:{x:74.13,y:58.69},  6:{x:69.27,y:69.04},
+   7:{x:74.17,y:87.32},  8:{x:68.66,y:81.71},  9:{x:59.86,y:89.04},
+  10:{x:55.45,y:84.33}, 11:{x:53.94,y:92.78}, 12:{x:44.78,y:64.62},
+  13:{x:33.74,y:76.90}, 14:{x:26.53,y:77.23}, 15:{x:15.31,y:76.83},
+  16:{x:13.18,y:68.48}, 17:{x:8.57,y:66.83}, 18:{x:5.02,y:64.88},
+  19:{x:23.00,y:67.73}, 20:{x:17.79,y:62.28}, 21:{x:16.72,y:55.10},
+  22:{x:16.29,y:48.55}, 23:{x:16.39,y:36.36}, 24:{x:4.75,y:40.63},
+  25:{x:6.54,y:29.31}, 26:{x:19.04,y:12.67}, 27:{x:12.31,y:11.08},
+  28:{x:15.49,y:16.59}, 29:{x:10.52,y:18.86}, 30:{x:17.28,y:22.39},
+  31:{x:8.75,y:24.47}, 32:{x:4.46,y:46.95}, 33:{x:5.07,y:57.28},
+  34:{x:32.42,y:60.21}, 35:{x:38.39,y:60.16}, 36:{x:39.75,y:66.96},
+  37:{x:45.47,y:54.72}, 38:{x:49.43,y:53.12}, 39:{x:53.13,y:49.97},
+  40:{x:56.82,y:51.41}, 41:{x:70.42,y:61.62}, 42:{x:88.06,y:63.31},
+  43:{x:75.84,y:49.60}, 44:{x:89.66,y:31.92}, 45:{x:77.68,y:27.79}
 };
 /* MAP-COORDS:END */
 

@@ -16,7 +16,7 @@
 // HOW IT WORKS
 //   1. Decode map.png by hand — chunk walk, zlib inflate, scanline unfilter.
 //      No image dependencies, so this runs on a bare Node install.
-//   2. Mask the teal marker fill.
+//   2. Mask the mint marker fill.
 //   3. Group masked pixels into connected components (4-way, iterative).
 //   4. Keep components that are marker-shaped, and take their centroids.
 //
@@ -35,28 +35,35 @@ import path from "path";
 const ROOT = path.resolve(import.meta.dirname, "..");
 const MAP = path.join(ROOT, "map.png");
 
-// Teal marker fill. Tuned to the map's marker color; wide enough to survive
-// the anti-aliased rim, tight enough to exclude the river's lighter blue.
-const isTeal = (r, g, b) => g > 200 && b > 170 && r < 200 && g > r + 40 && b > r + 10;
+// Mint marker fill, ~rgb(165,243,133). Tuned to the map's marker color; wide
+// enough to survive the anti-aliased rim, tight enough to exclude the land
+// green it sits on (~rgb(180,212,124)), which is darker and much less saturated.
+const isMarker = (r, g, b) => g > 225 && r < 205 && g > r + 50 && g > b + 70;
 
-// Marker-shaped: roughly circular, roughly 30px across.
-const MIN_AREA = 300, MAX_AREA = 2500;
-const MIN_SIDE = 18, MAX_SIDE = 44, MAX_SKEW = 8;
+// Marker-shaped: roughly circular, roughly 50px across.
+const MIN_AREA = 700, MAX_AREA = 2600;
+const MIN_SIDE = 36, MAX_SIDE = 62, MAX_SKEW = 10;
 
 // The number printed inside each detected circle, in detector index order.
-// Read by eye from the `--crops` montage against map.png (1090x762).
+// Read by eye from the `--crops` montage against map.png (1498x1050).
 //
 // THIS IS IMAGE-SPECIFIC. If the map is redrawn, the detector's index order
 // changes and this list is meaningless until it is re-read from a fresh
 // montage. `--emit` refuses to run if it stops being a bijection over 1-45,
 // but that check cannot tell you the digits moved — only a human can.
+//
+// Nor can you shortcut the re-read by matching new centroids to the previous
+// map's coordinates: tried on the 2026-08-08 redraw, nearest-neighbour put 24
+// in two slots and 32 in none, because 32 sits far closer to 24 here than it
+// did before. Only index 12 was actually wrong, but nothing in the match told
+// you which one — read the montage.
 export const DIGIT_ORDER = [
-  27, 26, 28, 29, 30, 31, 45,
-  25,  1, 44, 23, 24,  2, 22,
-  39,  4, 43, 32, 40,  3, 21,
-  37, 38, 33, 34, 35,  5, 20,
-  41, 42, 18, 17, 16, 19, 36,
-  12,  6, 15, 14, 13,  8, 10,
+  27, 26, 28, 29, 30, 31, 25,
+  45,  1, 44, 23, 24, 32, 22,
+   2, 39,  4, 43, 40,  3, 38,
+  21, 37, 33,  5, 34, 35, 41,
+  20, 42, 18, 12, 17, 36, 16,
+  19,  6, 15, 13, 14,  8, 10,
    7,  9, 11,
 ];
 
@@ -123,7 +130,7 @@ export function findMarkers({ width, height, bpp, stride, px }) {
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
       const o = y * stride + x * bpp;
-      if (isTeal(px[o], px[o + 1], px[o + 2])) mask[y * width + x] = 1;
+      if (isMarker(px[o], px[o + 1], px[o + 2])) mask[y * width + x] = 1;
     }
   }
 
@@ -318,7 +325,7 @@ if (isMain) {
         out[d] = px[s]; out[d + 1] = px[s + 1]; out[d + 2] = px[s + 2];
       }
     }
-    const R = 15.8, T = 2.2;
+    const R = 24.8, T = 2.2;
     for (const n of Object.keys(coords)) {
       const cx = coords[n].x_pct / 100 * W, cy = coords[n].y_pct / 100 * H;
       for (let y = Math.floor(cy - R - T); y <= Math.ceil(cy + R + T); y++) {

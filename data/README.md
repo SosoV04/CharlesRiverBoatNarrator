@@ -62,7 +62,7 @@ circles sit inside the frame, and all of those change the answer.
 PNG→JPEG for file size, or scaling to different pixel dimensions. Percentages
 are resolution-independent, so they survive that unchanged.
 
-Current source: `map.png` at repo root, 1090 × 762, aspect 1.430.
+Current source: `map.png` at repo root, 1498 × 1050, aspect 1.427.
 
 ### If you do regenerate
 
