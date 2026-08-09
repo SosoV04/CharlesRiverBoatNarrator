@@ -52,8 +52,10 @@
     flex:0 0 auto;box-shadow:0 2px 10px rgba(0,0,0,.18);z-index:10;}
   header.bar .home{background:none;border:none;color:#cdd9e6;font-size:20px;cursor:pointer;padding:4px 6px;line-height:1;}
   header.bar .stop-meta{flex:1;min-width:0;}
+  /* min-height holds the line open on the beats that carry no map number, so
+     the header does not jump as you move between numbered and unnumbered. */
   header.bar .stop-kicker{font-family:'Helvetica Neue',Arial,sans-serif;font-size:10px;letter-spacing:.18em;
-    text-transform:uppercase;color:var(--gold);}
+    text-transform:uppercase;color:var(--gold);min-height:13px;}
   header.bar .stop-title{font-size:16px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   header.bar .langtag{font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;
     border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:4px 10px;color:#dce7f1;cursor:pointer;white-space:nowrap;}
@@ -106,6 +108,10 @@
   .stop-row .num{font-family:'Helvetica Neue',Arial,sans-serif;font-size:12px;color:#fff;background:var(--river);
     min-width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:0 0 auto;}
   .stop-row.current .num{background:var(--gold);color:#3a2c08;}
+  /* Beats with no map circle keep the slot so titles stay aligned, but draw no
+     disc — an empty filled circle would read as a missing number. */
+  .stop-row .num.none{background:none;}
+  .stop-row.current .num.none{background:none;}
   .stop-row .nm{font-size:17px;}
   .stop-row .mn{margin-left:auto;font-family:'Helvetica Neue',Arial,sans-serif;font-size:12px;color:var(--muted);}
 
@@ -160,7 +166,7 @@
     <button class="home" id="homeBtn" aria-label="Stops">☰</button>
     <button class="home" id="mapBtn" aria-label="Tour map">🗺</button>
     <div class="stop-meta">
-      <div class="stop-kicker"><span id="stopNum">1</span> / <span id="stopTotal">37</span> · <span id="uiStop">Stop</span></div>
+      <div class="stop-kicker" id="stopKicker"></div>
       <div class="stop-title" id="stopTitle">—</div>
     </div>
     <div class="langtag" id="langTag">EN</div>
@@ -288,7 +294,6 @@ function chooseLang(code){
   $("#picker").classList.add("hidden");
   $("#tour").classList.remove("hidden");
   $("#langTag").textContent=code.toUpperCase();
-  $("#stopTotal").textContent=TOUR.length;
   loadStop(0);
 }
 // localise picker text to whichever lang button is hovered? keep EN default but show all 3 lines:
@@ -299,8 +304,11 @@ function loadStop(ix){
   $("#cruise").classList.remove("on");
   stopIx=Math.max(0,Math.min(TOUR.length-1,ix));
   const stop=TOUR[stopIx];
-  $("#stopNum").textContent=stopIx+1;
-  $("#uiStop").textContent=UI[lang].stop;
+  // Numbered by map circle, not by TOUR position: TOUR carries four beats with
+  // no circle (halfway break, closing, and the two retired segments), so the
+  // two counts drift apart after the break. Those four show a blank kicker.
+  const mapNum=MAP_NUM_BY_ID[stop.id];
+  $("#stopKicker").textContent=mapNum?`${mapNum} / ${MAP_STOP_IDS.length} · ${UI[lang].stop}`:"";
   $("#stopTitle").textContent=stop.title[lang];
   $("#uiStops").textContent=UI[lang].stops;
   $("#stageImg").src=stop.img;
@@ -396,7 +404,8 @@ function openSheet(){
     const secs=s.lines.reduce((a,l)=>a+l.sec,0);
     const row=document.createElement("div");
     row.className="stop-row"+(i===stopIx?" current":"");
-    row.innerHTML=`<span class="num">${i+1}</span><span class="nm">${s.title[lang]}</span><span class="mn">${(secs/60).toFixed(1)} min</span>`;
+    const mapNum=MAP_NUM_BY_ID[s.id];
+    row.innerHTML=`<span class="num${mapNum?"":" none"}">${mapNum??""}</span><span class="nm">${s.title[lang]}</span><span class="mn">${(secs/60).toFixed(1)} min</span>`;
     row.onclick=()=>{ closeSheet(); loadStop(i); };
     list.appendChild(row);
   });
@@ -451,6 +460,13 @@ const MAP_STOP_IDS = [
   "smoot", "mit", "mithacks", "mitalumni", "mitgreen",
   "finger", "statehouse", "liberty", "zakim", "museum"
 ];
+
+// Reverse of MAP_STOP_IDS: TOUR id -> the number printed on the map, so the
+// header and the stop list can label a beat by its circle rather than by its
+// position in TOUR. The four beats above that carry no map number are absent
+// here, and `undefined` is what makes them render unnumbered. Read only from
+// click handlers, so it is always initialised by the time it is used.
+const MAP_NUM_BY_ID = Object.fromEntries(MAP_STOP_IDS.map((id, i) => [id, i + 1]));
 
 $("#mapBtn").onclick=openMap;
 $("#mapBack").onclick=closeMap;
