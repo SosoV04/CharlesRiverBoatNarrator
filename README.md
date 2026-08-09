@@ -13,9 +13,9 @@ Portuguese, and `zh.js` Chinese — and inside each one you will find the tour
 laid out stop by stop, with the spoken lines written out in plain quotation
 marks. The README inside that folder walks you through editing them, and it is
 worth reading once before your first change. One important thing to know: your
-edit does not reach the live page by itself. A developer has to rebuild the
-site afterward before passengers see the new wording, so let one know once your
-changes are saved.
+edit does not reach the live page by itself. Someone has to rebuild the page
+afterward, which is a single command, so let a developer know once your changes
+are saved.
 
 ## What's in this repository
 
@@ -28,8 +28,8 @@ the QR codes in the `qr` subfolder.
 **`data`** — the positions of the numbered circles on the map, worked out
 automatically so the map's buttons land in the right places.
 
-**`scripts`** — a developer tool that recalculates those map positions whenever
-the map artwork is redrawn.
+**`scripts`** — developer tools: one builds the live page from the `narration`
+folder, the other recalculates the map positions when the artwork is redrawn.
 
 **`docs`** — the full tour script as a PDF and a plain text file, handy for
 printing or reading away from a computer.
@@ -37,5 +37,6 @@ printing or reading away from a computer.
 **`archive`** — older versions of the tour page and retired images, kept for
 reference. Nothing here is live.
 
-**`index.html`** — the live web page itself. Please leave this one to a
-developer.
+**`index.html`** — the live web page itself. It is built automatically from the
+`narration` folder, so please leave this one to a developer; editing it by hand
+gets overwritten on the next rebuild.

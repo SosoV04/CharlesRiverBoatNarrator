@@ -4,8 +4,9 @@ This folder holds every word passengers hear on the tour, in six languages.
 This guide explains how to change them safely.
 
 One thing to know before you start: saving a change here does not update the
-live page on its own. A developer has to rebuild the site afterward. Let one
-know when your edits are ready.
+live page on its own. Someone has to run one command afterward to rebuild it —
+`node scripts/build-index.mjs --sync-index`. If that means nothing to you, it
+doesn't need to; just tell a developer your edits are ready.
 
 ## The files
 
@@ -72,8 +73,13 @@ the river, so the count has to stay put:
 If a stop genuinely needs another line, or one fewer, ask a developer. It has
 to be added to all six languages and to `stops.js` together.
 
-Right now every language has 47 stops and 187 lines. Those two numbers should
+Right now every language has 49 stops and 193 lines. Those two numbers should
 match across all six files at all times.
+
+The good news is that this mistake cannot reach passengers. The rebuild checks
+the counts first and refuses to run if they don't line up, telling you exactly
+which stop and which language is off. A miscount costs you a confusing message,
+not a broken tour.
 
 ## Translating
 
@@ -84,5 +90,5 @@ names, same number of lines, in the same order.
 ## Before you hand it off
 
 Reread your change and check that every line still begins and ends with a
-quotation mark and has a comma after it. Then tell a developer, who will run
-the checks and rebuild the page.
+quotation mark and has a comma after it. Then tell a developer, who will rebuild
+the page and put your words in front of passengers.
