@@ -379,6 +379,24 @@ export const IT = {
       "Accanto c'è la DeWolfe Boathouse della BU, una delle rimesse da canottaggio più recenti del fiume, costruita nel 1999 per oltre 5 milioni di dollari.",
     ],
   },
+  esplanadehist: {
+    title: "Storia dell'Esplanade",
+    caption: "L'eredità degli Storrow",
+    lines: [
+      "L'Esplanade che abbiamo superato prima deve la sua esistenza a James Jackson Storrow, banchiere d'investimenti e primo presidente della General Motors, che sognava un parco sul lungofiume per tutti i bostoniani.",
+      "Non lo vide mai realizzato, ma dopo la sua morte la vedova Helen donò un milione di dollari per crearlo come suo memoriale, a condizione che la città eguagliasse il suo dono e non bloccasse mai l'accesso dei residenti al fiume.",
+      "La città accettò, ma anni dopo ruppe il patto e costruì un'autostrada che separava Back Bay dall'acqua. Per rimediare, ampliarono l'Esplanade e chiamarono l'autostrada Storrow Drive.",
+    ],
+  },
+  backbay: {
+    title: "Back Bay e terreno di riporto",
+    caption: "Da distese fangose a quartiere",
+    lines: [
+      "Back Bay prende il nome perché era davvero una baia di distese fangose soggette alle maree. Prima degli anni 1850, il Charles si allargava qui per quasi due miglia.",
+      "Per alleggerire il sovraffollamento, Boston iniziò a interrarla intorno al 1857. Treni speciali trasportavano ghiaia da Needham giorno e notte, un convoglio ogni 45 minuti, fino al 1882.",
+      "Il progetto risolse anche un pericolo per la salute, dovuto al cattivo odore delle distese fangose. Boston continuò ad aggiungere migliaia di acri in questo modo, creando quartieri come il West, North e South End, South Boston ed East Boston.",
+    ],
+  },
   smoot: {
     title: "I segni degli Smoot",
     caption: "364,4 smoot, ± un orecchio",

@@ -379,6 +379,24 @@ export const EN = {
       "Beside it is BU's DeWolfe Boathouse, one of the river's newer crew boathouses, built in 1999 for over 5 million dollars.",
     ],
   },
+  esplanadehist: {
+    title: "History of the Esplanade",
+    caption: "The Storrow legacy",
+    lines: [
+      "The Esplanade we passed earlier owes its existence to James Jackson Storrow, an investment banker and first president of General Motors, who dreamed of a waterfront park for all Bostonians.",
+      "He never saw it built, but after his death his widow Helen donated a million dollars to create it as his memorial, on the condition the city match her gift and never block residents' access to the river.",
+      "The city agreed, but years later broke the deal and built a highway separating Back Bay from the water. To make up for it, they expanded the Esplanade and named the highway Storrow Drive.",
+    ],
+  },
+  backbay: {
+    title: "Back Bay & Landfill",
+    caption: "From mudflats to neighborhood",
+    lines: [
+      "Back Bay is named because it really was a bay of tidal mudflats. Before the 1850s, the Charles spread nearly two miles wide here.",
+      "To ease overcrowding, Boston began filling it in around 1857. Special trains hauled gravel from Needham around the clock, a trainload every 45 minutes, until 1882.",
+      "The project also fixed a foul-smelling health hazard from the mudflats. Boston went on to add thousands of acres this way, creating neighborhoods like the West, North, and South Ends, South Boston, and East Boston.",
+    ],
+  },
   smoot: {
     title: "The Smoot Marks",
     caption: "364.4 smoots, ± one ear",

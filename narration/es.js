@@ -379,6 +379,24 @@ export const ES = {
       "A su lado está el DeWolfe Boathouse de BU, uno de los cobertizos de remo más nuevos del río, construido en 1999 por más de 5 millones de dólares.",
     ],
   },
+  esplanadehist: {
+    title: "Historia de la Esplanade",
+    caption: "El legado Storrow",
+    lines: [
+      "La Esplanade que pasamos antes debe su existencia a James Jackson Storrow, banquero de inversión y primer presidente de General Motors, que soñaba con un parque junto al agua para todos los bostonianos.",
+      "Nunca lo vio construido, pero tras su muerte su viuda Helen donó un millón de dólares para crearlo en su memoria, con la condición de que la ciudad igualara la donación y nunca bloqueara el acceso de los vecinos al río.",
+      "La ciudad aceptó, pero años después rompió el trato y construyó una autopista que separaba Back Bay del agua. Para compensarlo, ampliaron la Esplanade y nombraron a la autopista Storrow Drive.",
+    ],
+  },
+  backbay: {
+    title: "Back Bay y los rellenos",
+    caption: "De marismas a barrio",
+    lines: [
+      "Back Bay se llama así porque de verdad era una bahía de marismas de marea. Antes de la década de 1850, el Charles tenía aquí casi tres kilómetros de ancho.",
+      "Para aliviar el hacinamiento, Boston empezó a rellenarla hacia 1857. Trenes especiales acarreaban grava desde Needham día y noche, un convoy cada 45 minutos, hasta 1882.",
+      "El proyecto también resolvió un peligro sanitario y maloliente de las marismas. Boston siguió sumando así miles de hectáreas, creando barrios como el West End, el North End, el South End, South Boston y East Boston.",
+    ],
+  },
   smoot: {
     title: "Las marcas Smoot",
     caption: "364,4 smoots, ± una oreja",
