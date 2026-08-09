@@ -11,10 +11,11 @@ else in this repository concerns you. Each language has its own file — `en.js`
 for English, `es.js` Spanish, `fr.js` French, `it.js` Italian, `pt.js`
 Portuguese, and `zh.js` Chinese — and inside each one you will find the tour
 laid out stop by stop, with the spoken lines written out in plain quotation
-marks. Change the words between the quotation marks and leave the punctuation
-around them alone. One important thing to know: your edit does not reach the
-live page by itself. A developer has to rebuild the site afterward before
-passengers see the new wording, so let one know once your changes are saved.
+marks. The README inside that folder walks you through editing them, and it is
+worth reading once before your first change. One important thing to know: your
+edit does not reach the live page by itself. A developer has to rebuild the
+site afterward before passengers see the new wording, so let one know once your
+changes are saved.
 
 ## What's in this repository
 

@@ -176,10 +176,10 @@ export const beatTotalMin = (stop) => narrationMin(stop) + stop.trailingSilenceM
 // They were NOT taken from the same-named .jpg files that used to sit in the repo
 // root. Those were misnamed — every one of them held the photo belonging to a
 // different beat — which is exactly why this field is now derived instead of
-// declared. Four files that no longer belong to any beat were moved to _unused/:
+// declared. Four files that no longer belong to any beat were moved to archive/:
 // hyatt.jpg (a map graphic), history.jpg and esplanadehist.jpg (retired segments),
 // and backbay.jpg, which was never an image at all but the project README saved
-// under a .jpg extension (now _unused/OLD_README.md).
+// under a .jpg extension (now archive/OLD_README.md).
 //
 // Two segments were retired from the tour and have no beat and no photo here:
 // "History of the Esplanade" and "Back Bay & Landfill".
